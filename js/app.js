@@ -19,11 +19,30 @@ function createCamera() {
 	camera.lookAt(scene.position);
 }
 
+function createSphere() {
+	var sphereGeometry = new THREE.SphereGeometry(6, 30, 30);
+	var sphereMaterial = new THREE.MeshLambertMaterial({
+		color: "yellow"
+	});
+	var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+	scene.add(sphere)
+}
+
+function createLight() {
+	var spotLight = new THREE.SpotLight(0xffffff);
+	spotLight.position.set(10, 20, 20);
+	scene.add(spotLight);
+}
+
 function init() {
 	scene = new THREE.Scene();
 
 	createRenderer();
 	createCamera();
+
+	createSphere();
+
+	createLight();
 
 	document.body.appendChild(renderer.domElement);
 
