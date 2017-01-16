@@ -1,9 +1,7 @@
 var scene;
 var camera;
 var renderer;
-var sphere;
-var cube;
-var plane;
+var earth;
 
 function createRenderer() {
 	renderer = new THREE.WebGLRenderer();
@@ -14,7 +12,7 @@ function createRenderer() {
 
 function createCamera() {
 	camera = new THREE.PerspectiveCamera(
-		45,
+		100,
 		window.innerWidth / window.innerHeight,
 		0.1, 10000);
 	camera.position.x = 15;
@@ -23,36 +21,26 @@ function createCamera() {
 	camera.lookAt(scene.position);
 }
 
-function createSphere() {
-	var geometry = new THREE.SphereGeometry(6, 30, 30);
-	var material = new THREE.MeshLambertMaterial({
-		color: "red"
+function createEarthMaterial() {
+	var texture = new THREE.Texture();
+	var loader = new THREE.ImageLoader();
+	loader.load('assets/earthmap1k.jpg', function(image) {
+		texture.image = image;
+		texture.needsUpdate = true;
 	});
-	sphere = new THREE.Mesh(geometry, material);
-	sphere.castShadow = true;
-	scene.add(sphere)
+
+	var material = new THREE.MeshBasicMaterial();
+	material.map = texture;
+	return material;
 }
 
-function createCube() {
-	var geometry = new THREE.BoxGeometry(4, 4, 4);
-	var material = new THREE.MeshLambertMaterial({
-		color: "yellow"
-	});
-	cube = new THREE.Mesh(geometry, material);
-	cube.castShadow = true;
-	scene.add(cube);
-}
-
-function createPlane() {
-	var geometry = new THREE.PlaneGeometry(40, 40);
-	var material = new THREE.MeshLambertMaterial({
-		color: 'lightgray'
-	});
-	plane = new THREE.Mesh(geometry, material);
-	plane.receiveShadow = true;
-	plane.rotation.x = -0.5 * Math.PI;
-	plane.position.y = -5;
-	scene.add(plane);
+function createEarth() {
+	var geometry = new THREE.SphereGeometry(15, 30, 30);
+	var material = createEarthMaterial();
+	earth = new THREE.Mesh(geometry, material);
+	// sphere.castShadow = true;
+	earth.name = 'earth';
+	scene.add(earth);
 }
 
 function createLight() {
@@ -69,12 +57,8 @@ function init() {
 
 	createRenderer();
 	createCamera();
-
-	// createSphere();
-	createCube();
-
-	createPlane();
 	createLight();
+	createEarth();		
 
 	document.body.appendChild(renderer.domElement);
 
@@ -82,8 +66,8 @@ function init() {
 }
 
 function render() {
-	cube.rotation.x += 0.01;
-	cube.rotation.y += 0.01;
+	earth.rotation.x += 0.005;
+	earth.rotation.y += 0.005;
 	renderer.render(scene, camera);
 
 	requestAnimationFrame(render);
