@@ -2,6 +2,7 @@ var scene;
 var camera;
 var renderer;
 var earth;
+var cameraControls;
 
 function createRenderer() {
 	renderer = new THREE.WebGLRenderer();
@@ -12,19 +13,21 @@ function createRenderer() {
 
 function createCamera() {
 	camera = new THREE.PerspectiveCamera(
-		100,
+		125,
 		window.innerWidth / window.innerHeight,
 		0.1, 10000);
 	camera.position.x = 15;
 	camera.position.y = 16;
 	camera.position.z = 13;
 	camera.lookAt(scene.position);
+
+	cameraControls = new THREE.OrbitControls(camera);
 }
 
 function createEarthMaterial() {
 	var texture = new THREE.Texture();
 	var loader = new THREE.ImageLoader();
-	loader.load('assets/earthmap1k.jpg', function(image) {
+	loader.load('assets/earth5k.jpg', function(image) {
 		texture.image = image;
 		texture.needsUpdate = true;
 	});
@@ -66,8 +69,9 @@ function init() {
 }
 
 function render() {
-	earth.rotation.x += 0.005;
-	earth.rotation.y += 0.005;
+
+	cameraControls.update();
+
 	renderer.render(scene, camera);
 
 	requestAnimationFrame(render);
