@@ -1,6 +1,8 @@
 var scene;
 var camera;
 var renderer;
+var sphere;
+var cube;
 
 function createRenderer() {
 	renderer = new THREE.WebGLRenderer();
@@ -20,12 +22,21 @@ function createCamera() {
 }
 
 function createSphere() {
-	var sphereGeometry = new THREE.SphereGeometry(6, 30, 30);
-	var sphereMaterial = new THREE.MeshLambertMaterial({
-		color: "yellow"
+	var geometry = new THREE.SphereGeometry(6, 30, 30);
+	var material = new THREE.MeshLambertMaterial({
+		color: "orange"
 	});
-	var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+	sphere = new THREE.Mesh(geometry, material);
 	scene.add(sphere)
+}
+
+function createCube() {
+	var geometry = new THREE.BoxGeometry(1, 1, 1);
+	var material = new THREE.MeshLambertMaterial({
+		color: "lightblue"
+	});
+	cube = new THREE.Mesh(geometry, material);
+	scene.add(cube);
 }
 
 function createLight() {
@@ -41,6 +52,7 @@ function init() {
 	createCamera();
 
 	createSphere();
+	// createCube();
 
 	createLight();
 
@@ -50,6 +62,8 @@ function init() {
 }
 
 function render() {
+	sphere.rotation.x += 0.1;
+	sphere.rotation.y += 0.1;
 	renderer.render(scene, camera);
 
 	requestAnimationFrame(render);
