@@ -2,6 +2,7 @@ var scene;
 var camera;
 var renderer;
 var earth;
+var clouds;
 var cameraControls;
 
 function createRenderer() {
@@ -27,13 +28,27 @@ function createCamera() {
 function createEarthMaterial() {
 	var texture = new THREE.Texture();
 	var loader = new THREE.ImageLoader();
-	loader.load('assets/earth5k.jpg', function(image) {
+	loader.load('assets/earthmap2k.jpg', function(image) {
 		texture.image = image;
 		texture.needsUpdate = true;
 	});
 
-	var material = new THREE.MeshBasicMaterial();
+	var material = new THREE.MeshPhongMaterial();
 	material.map = texture;
+	return material;
+}
+
+function createCloudsMaterial() {
+	var texture = new THREE.Texture();
+	var loader = new THREE.ImageLoader();
+	loader.load('assets/fair_clouds_1k.png', function(image) {
+		texture.image = image;
+		texture.needsUpdate = true;
+	});
+
+	var material = new THREE.MeshPhongMaterial();
+	material.map = texture;
+	material.transparent = true;
 	return material;
 }
 
@@ -41,18 +56,26 @@ function createEarth() {
 	var geometry = new THREE.SphereGeometry(15, 30, 30);
 	var material = createEarthMaterial();
 	earth = new THREE.Mesh(geometry, material);
-	// sphere.castShadow = true;
 	earth.name = 'earth';
 	scene.add(earth);
 }
 
+function createClouds() {
+	var geometry = new THREE.SphereGeometry(15.1, 30, 30);
+	var material = createCloudsMaterial();
+	clouds = new THREE.Mesh(geometry, material);
+	clouds.name = 'clouds';
+	scene.add(clouds);
+}
+
 function createLight() {
-	var spotLight = new THREE.SpotLight(0xffffff);
-	spotLight.position.set(10, 20, 20);
-	spotLight.shadowCameraNear = 20;
-	spotLight.shadowCameraFar = 50;
-	spotLight.castShadow = true;
-	scene.add(spotLight);
+	var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+	directionalLight.position.set(100, 10, -50);
+	directionalLight.name = "directional";
+	scene.add(directionalLight);
+
+	var ambientLight = new THREE.AmbientLight(0x111111);
+	scene.add(ambientLight);
 }
 
 function init() {
@@ -61,7 +84,8 @@ function init() {
 	createRenderer();
 	createCamera();
 	createLight();
-	createEarth();		
+	createEarth();	
+	createClouds();
 
 	document.body.appendChild(renderer.domElement);
 
@@ -72,9 +96,15 @@ function render() {
 
 	cameraControls.update();
 
-	renderer.render(scene, camera);
+	scene.getObjectByName('earth').rotation.y += 0.0005;
+	scene.getObjectByName('clouds').rotation.y += 0.0007;
 
+	renderer.render(scene, camera);
 	requestAnimationFrame(render);
 }
 
 init();
+
+
+
+
