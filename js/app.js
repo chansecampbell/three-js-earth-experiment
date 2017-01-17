@@ -33,8 +33,29 @@ function createEarthMaterial() {
 		texture.needsUpdate = true;
 	});
 
+	var normalTexture = new THREE.Texture();
+	var loader = new THREE.ImageLoader();
+	loader.load('assets/earth_normalmap_flat2k.jpg', function(image) {
+		normalTexture.image = image;
+		normalTexture.needsUpdate = true;
+	});
+
+	var specularTexture = new THREE.Texture();
+	var loader = new THREE.ImageLoader();
+	loader.load('assets/earthspec2k.jpg', function(image) {
+		specularTexture.image = image;
+		specularTexture.needsUpdate = true;
+	});
+
 	var material = new THREE.MeshPhongMaterial();
 	material.map = texture;
+
+	material.normalMap = normalTexture;
+	material.normalScale = new THREE.Vector2(0.7, 0.7);
+
+	material.specularMap = specularTexture;
+	material.specular = new THREE.Color(0x262626);
+
 	return material;
 }
 
