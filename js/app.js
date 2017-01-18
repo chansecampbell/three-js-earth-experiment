@@ -3,6 +3,7 @@ var camera;
 var renderer;
 var earth;
 var clouds;
+var starfield;
 var cameraControls;
 
 function createRenderer() {
@@ -28,7 +29,7 @@ function createCamera() {
 function createEarthMaterial() {
 	var texture = new THREE.Texture();
 	var loader = new THREE.ImageLoader();
-	loader.load('assets/earthmap2k.jpg', function(image) {
+	loader.load('assets/earth10k.jpg', function(image) {
 		texture.image = image;
 		texture.needsUpdate = true;
 	});
@@ -62,7 +63,7 @@ function createEarthMaterial() {
 function createCloudsMaterial() {
 	var texture = new THREE.Texture();
 	var loader = new THREE.ImageLoader();
-	loader.load('assets/fair_clouds_1k.png', function(image) {
+	loader.load('assets/thickerclouds.png', function(image) {
 		texture.image = image;
 		texture.needsUpdate = true;
 	});
@@ -89,6 +90,22 @@ function createClouds() {
 	scene.add(clouds);
 }
 
+function createStarfield() {
+	var geometry = new THREE.SphereGeometry(90, 32, 32);
+	var texture = new THREE.Texture();
+	var loader = new THREE.ImageLoader();
+	loader.load('assets/galaxy_starfield.png', function(image) {
+		texture.image = image;
+		texture.needsUpdate = true;
+	});
+
+	var material = new THREE.MeshBasicMaterial();
+	material.map = texture;
+	material.side = THREE.BackSide;
+	starfield = new THREE.Mesh(geometry, material);
+	scene.add(starfield);
+}
+
 function createLight() {
 	var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 	directionalLight.position.set(100, 10, -50);
@@ -107,6 +124,7 @@ function init() {
 	createLight();
 	createEarth();	
 	createClouds();
+	createStarfield();
 
 	document.body.appendChild(renderer.domElement);
 
